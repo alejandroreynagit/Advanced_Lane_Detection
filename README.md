@@ -44,9 +44,21 @@ This undistorted image is used as reference for lane detection within the pipeli
 
 ## Threshold Image - Filtering
 
+We apply color and gradient thresholding, i.e., filtering, in order to better detect lanes that will be used for fitting the lane. This is a key step in the pipeline. There are several colorspaces and for this project we explore RGB, HSV, HLS, LAB and the Sobel pperator to detect edges (or gradients).
+
+Results of these colorspaces are shown here:
+
+![rgb]
+![hsv]
+![hls]
+![lab]
+
+Imagen Undistr y filtrada
 ## Perspective Transformation - "Birds-eye-view"
+Filtrada y birds eye 
 
 ## Lane Fit
+
 
 ## Final Result
 
@@ -81,3 +93,7 @@ This project has been challenging and very interesting, small pieces of code can
 
 [calibration]: output_images/Calibration.png 
 [undistorted]: output_images/Real_Undistorted.png 
+[rgb]: output_images/Thresh_RGB.png
+[hsv]: output_images/Thresh_HSV.png
+[hls]: output_images/Thresh_HLS.png
+[lab]: output_images/Thresh_LAB.png
