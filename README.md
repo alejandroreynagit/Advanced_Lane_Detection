@@ -3,7 +3,7 @@
 
 ## Writeup - Daniel Alejandro Reyna Torres
 
-In this project, your goal is to write a software pipeline to identify the lane boundaries in a video, but the main output or product we want you to create is a detailed writeup of the project.  Check out the [writeup template](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup.  
+In this project, goal is to write a software pipeline to identify the lane boundaries in a video. 
 
 ---
 
@@ -22,14 +22,62 @@ The goals / steps of this project are the following:
 
 ---
 
-The images for camera calibration are stored in the folder called `camera_cal`.  The images in `test_images` are for testing your pipeline on single frames.  If you want to extract more test images from the videos, you can simply use an image writing method like `cv2.imwrite()`, i.e., you can read the video in frame by frame as usual, and for frames you want to save for later you can write to an image file.  
+## Camera Calibration
 
-To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called `output_images`, and include a description in your writeup for the project of what each image shows.    The video called `project_video.mp4` is the video your pipeline should work well on.  
+The very fist step in this project is camera calibration. We have to be sure that we have under certain control our image acquisition process. In order to deal with distortion caused by the camera we use OpenCV functions to perform the camera calibration. During the calibration process we calculate the distortion matrix and distortion coefficients. These values are used in our images for **distortion correction**. The following image is one of the images used to perform camera calibration, it can be seen both the original image and one ot the same image but undistorted:
 
-The `challenge_video.mp4` video is an extra (and optional) challenge for you if you want to test your pipeline under somewhat trickier conditions.  The `harder_challenge.mp4` video is another optional challenge and is brutal!
+![calibration]
 
-If you're feeling ambitious (again, totally optional though), don't stop there!  We encourage you to go out and take video of your own, calibrate your camera and show us how you would implement this project from scratch!
+Once we have performed the camera calibration, let's deep dive in the pipeline for lane detection.
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+---
 
+## **Pipeline**
+
+## Distortion Correction
+
+We apply the distortion correction to one of the the test_images:
+
+![undistorted]
+
+This undistorted image is used as reference for lane detection within the pipeline.
+
+## Threshold Image - Filtering
+
+## Perspective Transformation - "Birds-eye-view"
+
+## Lane Fit
+
+## Final Result
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Improvements to your pipeline
+
+A possible improvement would be to keep tunning filters, specially the white one. As you can see in the pipeline images, yellow and white are well extracted but also some blue (sky)! I think if I try an HSV filter can also be a good option.
+
+Another potential improvement that would be very hulpful would be to include some lane tracking, i.e., we know lanes follow a line and if we suppose this line is not moving that much we then can adapt our resultant lanes to this, at least to avoid big jumps between frames, which happens in some of them. I am thinking on keeping kind of a buffer or just saving past frame values (lane position) and use them in the current one. 
+
+```
+python main.py -c <camera selection> -n <face collection name>
+```
+---
+
+## Discussion
+
+This project has been challenging and very interesting, small pieces of code can bring a huge result, if they are well done. A mistake can take everything down though. Debugging in this case of scenarios is pretty different, in a good way, because we can visualise the results through images and not just numbers!
+
+
+[calibration]: output_images/Calibration.png 
+[undistorted]: output_images/Real_Undistorted.png 
