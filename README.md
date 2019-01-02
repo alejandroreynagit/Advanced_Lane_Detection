@@ -5,6 +5,8 @@
 
 In this project, goal is to write a software pipeline to identify the lane boundaries in a video. 
 
+![example]
+
 ---
 
 ## The Project
@@ -24,7 +26,7 @@ The goals / steps of this project are the following:
 
 ## Camera Calibration
 
-The very fist step in this project is camera calibration. We have to be sure that we have under certain control our image acquisition process. In order to deal with distortion caused by the camera we use OpenCV functions to perform the camera calibration. During the calibration process we calculate the distortion matrix and distortion coefficients. These values are used in our images for ***distortion correction***. The following image is one of the images used to perform camera calibration, it can be seen both the original image and one ot the same image but undistorted (edges look straight):
+The very fist step in this project is camera calibration. We have to be sure that we have under certain control our image conditions. In order to deal with distortion caused by cameras we use OpenCV functions to perform the camera calibration. During the calibration process we calculate the distortion matrix and distortion coefficients. These values are used in every image for ***distortion correction***. The following image is one of the images used to perform camera calibration, it can be seen both the original image and one ot the same image but undistorted (edges look straight):
 
 ![calibration]
 
@@ -43,7 +45,7 @@ This undistorted image is used as reference for lane detection within the pipeli
 
 ## Threshold Image - Filtering
 
-We apply color and gradient thresholding, i.e., filtering, in order to better detect lanes that will be used for fitting the lane. This is a key step in the pipeline. There are several colorspaces and for this project we explore RGB, HSV, HLS, LAB and the Sobel operator to detect edges (or gradients).
+We apply color and gradient thresholding, i.e., filtering, in order to better detect lane lines that will be used for fitting the lane. This is a key step in the pipeline. There are several colorspaces and for this project we explore RGB, HSV, HLS, LAB and the Sobel operator to detect edges (or gradients).
 
 Results of these colorspaces are shown here:
 
@@ -51,7 +53,7 @@ Results of these colorspaces are shown here:
 
 On the RGB components, we see that the red channel captures both yellow and white lines. For HSV and HLS, the S channel (saturation) gives the best result on detecting the lane lines. Finally, the LAB colorspace through the B channel seems to detect well only the yellow lines.
 
-The Sobel operator is useful to identify changes in color intensity that allow us to filter line components going in either the vertical or horizontal direction. For this propject we used the HLS colorspace for lane line detection. Results of sobel operator using the S and L channels:
+The Sobel operator is useful to identify changes in color intensities that allow us to filter line components going in either the vertical or horizontal direction. For this project was used the HLS colorspace for lane lines detection. Results of sobel operator using the S and L channels:
 ![sobel]
 
 The goal in this section is to find right thresholds for detecting both yellow and white lines of the lane, we should consider that images were taken under different lighting conditions, shades, etc. We have to deal with this in order to perform a stable lane lines detection.
@@ -80,43 +82,37 @@ Next is to run a ***sliding window*** search over the warped image, using the pe
 
 Given the polynomial fit for the left and right lane lines obtained from the sliding window process, was calculated the radius of curvature for each line according to the formula: 
 
+![roc]
 
+where 'y' are values going from top to bottom of the image use for lane line estimation and 'A' and 'B' values are the coefficients from the 2nd order polynomial fitted por each lane line.  
 
-The results are given in pixels, so be sure to converted the values from pixels to meters for more realistic interpretation. Results are display in the final results shown below.
+Let's compute the car position with respect to the centre of the lane. It is assummed that the lane centre is the centre of the image. Car's position would be the difference between the lane centre and the mean value of x positions at the bottom for both left and right lane lines. 
 
+The results are given in pixels, so they are converted from pixels to meters for more realistic interpretation. It was considered a resolution of 30m/720pixels in y dimension and 3.7m/700pixels in x dimension.
+
+Results are display in the final results shown below.
 ## Final Result
 
 At the end of the process we end up with this:
 
 ![result]
 
+Here's a [link to my video result](output_images/project_video_out.mp4). 
+The folder `output_images` contains examples of the output from each stage of the advanced lane detection pipeline, including videos.
 
-
-
-
-
-
-
-
-
----
-
-## Improvements to your pipeline
-
-A possible improvement would be to keep tunning filters, specially the white one. As you can see in the pipeline images, yellow and white are well extracted but also some blue (sky)! I think if I try an HSV filter can also be a good option.
-
-Another potential improvement that would be very hulpful would be to include some lane tracking, i.e., we know lanes follow a line and if we suppose this line is not moving that much we then can adapt our resultant lanes to this, at least to avoid big jumps between frames, which happens in some of them. I am thinking on keeping kind of a buffer or just saving past frame values (lane position) and use them in the current one. 
-
-```
-python main.py -c <camera selection> -n <face collection name>
-```
 ---
 
 ## Discussion
 
-This project has been challenging and very interesting, small pieces of code can bring a huge result, if they are well done. A mistake can take everything down though. Debugging in this case of scenarios is pretty different, in a good way, because we can visualise the results through images and not just numbers!
+This project has been challenging and of course very interesting. Some exploration and update can be performed in the thresholdins process, thinking on combining different filters. For this project I selected the HLS to work with, but a combination might yield in better results during lane estimation.
 
+Also, the warping stage could be dynamic instead of fixed tuned, we have to somehow ensure straight lines! Moreover, under some scenarios (on challenging videos) the current version lane detection is not 100% accurate, there are bigger shadows, cars, irregular street conditions, etc. to be highly considered. These conditions can be tackled by storing information related to previous video frames, thus in cases where lanes jump drastically ot get lost, they can be validated by using past references, mean values, etc., making the detection cleaner.
 
+Thank you for reading this report.
+
+_Daniel_
+
+[example]: lane-drawn.jpg
 [calibration]: output_images/Calibration.png 
 [undistorted]: output_images/Real_Undistorted.png 
 [colorspaces]: output_images/Thresh_colorspaces.png
@@ -125,4 +121,5 @@ This project has been challenging and very interesting, small pieces of code can
 [roi_warped]: output_images/ROI_Warped.png
 [histogram]: output_images/Histogram.png
 [windowing]: output_images/Windowing.png
+[roc]: ROC_eq.png
 [result]: output_images/ResultPipeline.png
